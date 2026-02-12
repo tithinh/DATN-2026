@@ -158,10 +158,8 @@
             <div class="sidebar-widget">
               <h3 class="widget-title">Tìm kiếm</h3>
               <div class="search-box">
+                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                 <input type="text" placeholder="Tìm bài viết..." class="search-input" />
-                <button class="search-btn">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                </button>
               </div>
             </div>
 
@@ -409,25 +407,26 @@
 }
 
 .page-btn {
-  min-width: 44px;
-  height: 44px;
-  padding: 0 16px;
-  border: 1px solid #e2e8f0;
+  min-width: 38px;
+  height: 38px;
+  padding: 0 14px;
+  border: 1.5px solid #e2e8f0;
   background: #ffffff;
   color: #475569;
-  border-radius: 10px;
+  border-radius: 50px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.page-btn:hover { border-color: #ff6b35; color: #ff6b35; }
+.page-btn:hover { border-color: #ff6b35; color: #ff6b35; background: #fff7f3; }
 
 .page-btn.active {
   background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
   border-color: transparent;
   color: #ffffff;
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.25);
 }
 
 /* Sidebar */
@@ -455,25 +454,45 @@
 
 /* Search */
 .search-box {
+  position: relative;
   display: flex;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  overflow: hidden;
+  align-items: center;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 50px;
+  background: #f8fafc;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.search-box:focus-within {
+  border-color: #ff6b35;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.08);
+}
+
+.search-icon {
+  position: absolute;
+  left: 14px;
+  color: #94a3b8;
+  pointer-events: none;
+  transition: color 0.3s;
+}
+
+.search-box:focus-within .search-icon {
+  color: #ff6b35;
 }
 
 .search-input {
   flex: 1;
-  padding: 12px 16px;
+  padding: 11px 16px 11px 38px;
   border: none;
   font-size: 14px;
   outline: none;
+  background: transparent;
+  color: #0f172a;
 }
 
-.search-btn {
-  padding: 12px 16px;
-  border: none;
-  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
-  cursor: pointer;
+.search-input::placeholder {
+  color: #94a3b8;
 }
 
 /* Categories */

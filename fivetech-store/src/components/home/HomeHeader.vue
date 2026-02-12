@@ -17,13 +17,11 @@
 
       <!-- Search Box -->
       <div class="search-box">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.3-4.3"></path>
+        </svg>
         <input type="text" placeholder="Tìm kiếm sản phẩm..." class="search-input" />
-        <button class="search-btn">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.3-4.3"></path>
-          </svg>
-        </button>
       </div>
 
       <!-- Auth Buttons -->
@@ -150,24 +148,36 @@
 
 /* Search Box */
 .search-box {
+  position: relative;
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 50px;
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .search-box:focus-within {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: #ff6b35;
-  box-shadow: 0 0 20px rgba(255, 107, 53, 0.2);
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 107, 53, 0.5);
+  box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.08);
+}
+
+.search-icon {
+  position: absolute;
+  left: 14px;
+  color: #94a3b8;
+  pointer-events: none;
+  transition: color 0.3s;
+}
+
+.search-box:focus-within .search-icon {
+  color: #ff6b35;
 }
 
 .search-input {
-  width: 240px;
-  padding: 12px 16px;
+  width: 220px;
+  padding: 10px 16px 10px 40px;
   border: none;
   background: transparent;
   color: #ffffff;
@@ -177,23 +187,6 @@
 
 .search-input::placeholder {
   color: #94a3b8;
-}
-
-.search-btn {
-  padding: 0 16px;
-  align-self: stretch;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
-  border: none;
-  color: #ffffff;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.search-btn:hover {
-  background: linear-gradient(135deg, #e85a2a 0%, #e88619 100%);
 }
 
 /* Cart Icon */
@@ -294,6 +287,7 @@
 
   .search-input {
     width: 100%;
+    padding-left: 40px;
   }
 
   .mobile-menu-toggle {

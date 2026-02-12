@@ -5,6 +5,7 @@
 @import "./views/cilent/css/cart.css";
 @import "./views/cilent/css/checkout.css";
 @import "./views/cilent/css/user-profile.css";
+@import "./views/admin/css/admin.css";
 
 /* ================= RESET ================= */
 *,

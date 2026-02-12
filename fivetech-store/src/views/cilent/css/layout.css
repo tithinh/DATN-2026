@@ -84,13 +84,13 @@ body {
 
 .form-input {
     width: 100%;
-    padding: 14px 18px;
-    border: 2px solid #e2e8f0;
-    border-radius: 12px;
+    padding: 12px 20px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 50px;
     font-size: 15px;
     color: #0f172a;
     background: #f8fafc;
-    transition: all 0.3s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     outline: none;
     box-sizing: border-box;
 }
@@ -98,7 +98,7 @@ body {
 .form-input:focus {
     border-color: #ff6b35;
     background: #ffffff;
-    box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.1);
+    box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.08);
 }
 
 .form-input::placeholder {
@@ -111,22 +111,22 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    padding: 18px 40px;
+    gap: 10px;
+    padding: 14px 36px;
     background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
     color: #ffffff;
     border: none;
-    border-radius: 14px;
-    font-size: 16px;
+    border-radius: 50px;
+    font-size: 15px;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .submit-btn:hover,
 .btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(255, 107, 53, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(255, 107, 53, 0.35);
 }
 
 /* Section Titles */
