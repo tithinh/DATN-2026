@@ -16,18 +16,13 @@
       </nav>
 
       <!-- Search Box -->
-      <div class="search-box" ref="searchBox">
-        <input
-          type="text"
-          v-model="searchQuery"
-          placeholder="Tìm kiếm sản phẩm..."
-          class="search-input"
-          @focus="showDropdown = true"
-          @keyup.enter="goToSearch"
-        />
-
-        <button class="search-btn" @click="goToSearch">
-          🔍
+      <div class="search-box">
+        <input type="text" placeholder="Tìm kiếm sản phẩm..." class="search-input" />
+        <button class="search-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+          </svg>
         </button>
       </div>
 
@@ -59,117 +54,7 @@
   </header>
 </template>
 
-<script setup>
-import { ref, watch, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import axios from 'axios'
-
-const router = useRouter()
-
-const searchQuery = ref('')
-const results = ref([])
-const showDropdown = ref(false)
-let debounceTimer = null
-
-const submitSearch = () => {
-  if (!keyword.value.trim()) return
-
-  router.push({
-    name: 'Products',
-    query: {
-      search: keyword.value.trim()
-    }
-  })
-}
-
-// Gọi API khi gõ
-watch(searchQuery, (val) => {
-  clearTimeout(debounceTimer)
-
-  if (!val.trim()) {
-    results.value = []
-    return
-  }
-
-  debounceTimer = setTimeout(async () => {
-    try {
-      const res = await axios.get('/api/search', {
-        params: { q: val, limit: 6 }
-      })
-      results.value = res.data.data
-    } catch (e) {
-      results.value = []
-    }
-  }, 300)
-})
-
-// Enter / click icon
-const goToSearch = () => {
-  const q = searchQuery.value.trim()
-  if (!q) return
-
-  showDropdown.value = false
-  router.push({ path: '/products', query: { search: q } })
-}
-
-// Click ra ngoài thì đóng dropdown
-const searchBox = ref(null)
-onMounted(() => {
-  document.addEventListener('click', (e) => {
-    if (!searchBox.value?.contains(e.target)) {
-      showDropdown.value = false
-    }
-  })
-})
-</script>
-
-
 <style scoped>
-.search-box {
-  position: relative;
-}
-
-.search-dropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,.1);
-  margin-top: 8px;
-  z-index: 50;
-  overflow: hidden;
-}
-
-.search-item {
-  display: flex;
-  gap: 12px;
-  padding: 10px;
-  text-decoration: none;
-  color: #111;
-}
-
-.search-item:hover {
-  background: #f3f4f6;
-}
-
-.search-item img {
-  width: 48px;
-  height: 48px;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-.name {
-  font-weight: 600;
-}
-
-.price {
-  color: #e11d48;
-  font-size: 14px;
-}
-
 /* ================= HOME HEADER ================= */
 .home-header {
   position: sticky;
@@ -242,6 +127,10 @@ onMounted(() => {
   background: rgba(255, 255, 255, 0.1);
 }
 
+.nav-link.active {
+  color: #ff6b35;
+  background: rgba(255, 107, 53, 0.15);
+}
 
 .nav-link::after {
   content: '';
@@ -291,7 +180,11 @@ onMounted(() => {
 }
 
 .search-btn {
-  padding: 12px 16px;
+  padding: 0 16px;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
   border: none;
   color: #ffffff;

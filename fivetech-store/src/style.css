@@ -3,6 +3,8 @@
 @import "./views/cilent/css/contact.css";
 @import "./views/cilent/css/product.css";
 @import "./views/cilent/css/cart.css";
+@import "./views/cilent/css/checkout.css";
+@import "./views/cilent/css/user-profile.css";
 
 /* ================= RESET ================= */
 *,

@@ -10,24 +10,21 @@
         </button>
 
         <div class="quickview-content">
-          <!-- Product Gallery -->
+          <!-- Product Gallery (Simplified) -->
           <div class="quickview-gallery">
             <div class="main-image">
-              <img 
-                :src="activeImage || 'https://via.placeholder.com/500?text=' + encodeURIComponent(product.name)" 
-                :alt="product.name" 
-              />
+              <img :src="activeImage || product.image" :alt="product.name" />
             </div>
-
-            <div class="thumbnail-list" v-if="images.length">
+            <!-- Thumbnails if available, otherwise just placeholders or nothing -->
+             <div class="thumbnail-list">
               <button 
-                v-for="(img, index) in images" 
+                v-for="(img, index) in [product.image, ...(product.images || [])].slice(0, 4)" 
                 :key="index"
                 class="thumbnail"
                 :class="{ active: activeImage === img }"
                 @click="activeImage = img"
               >
-                <img :src="img" :alt="`${product.name} ${+index + 1}`" />
+                <img :src="img" :alt="`${product.name} ${index}`" />
               </button>
             </div>
           </div>
@@ -39,67 +36,56 @@
             <div class="product-meta">
               <div class="rating">
                 <span class="stars">★★★★★</span>
-                <span class="rating-text">{{ averageRating.toFixed(1) }} ({{ product.comments?.length || 0 }} đánh giá)</span>
+                <span class="rating-text">{{ product.rating }} ({{ product.reviewCount }} đánh giá)</span>
               </div>
               <span class="divider">|</span>
-              <span class="sku">SKU: {{ selectedVariant?.sku || product.slug?.toUpperCase() || 'N/A' }}</span>
+              <span class="sku">SKU: {{ product.sku || 'N/A' }}</span>
             </div>
 
             <div class="price-box">
-              <span class="current-price">{{ formatPrice(selectedVariant?.discount_price	 || product.discount_price	 || product.base_price) }}</span>
-              <span v-if="discount > 0" class="old-price">{{ formatPrice(selectedVariant?.base_price || product.base_price) }}</span>
+              <span class="current-price">{{ formatPrice(product.price) }}</span>
+              <span v-if="product.oldPrice" class="old-price">{{ formatPrice(product.oldPrice) }}</span>
               <span v-if="discount > 0" class="discount-badge">-{{ discount }}%</span>
             </div>
 
-            <div class="short-description">
-              {{ product.short_desc || product.description?.substring(0, 150) + '...' || 'Mô tả ngắn về sản phẩm đang được cập nhật. Sản phẩm chất lượng cao, chính hãng...' }}
+            <div class="short-description" v-if="product.shortDescription">
+              {{ product.shortDescription }}
+            </div>
+             <div class="short-description" v-else>
+               Mô tả ngắn về sản phẩm đang được cập nhật. Sản phẩm chất lượng cao, chính hãng...
             </div>
 
-            <!-- Variants -->
-            <div class="variant-section" v-if="product.variants?.length">
-              <h4 class="variant-title">Màu sắc / Biến thể</h4>
+            <!-- Variants (Mockup/Simplified) -->
+            <div class="variant-section">
+              <h4 class="variant-title">Màu sắc</h4>
               <div class="variant-options">
-                <button
-                  v-for="variant in product.variants"
-                  :key="variant.variant_id"
-                  class="variant-btn"
-                  :class="{ active: selectedVariant?.variant_id === variant.variant_id }"
-                  @click="selectVariant(variant)"
-                >
-                  <span class="color-dot" :style="{ backgroundColor: variant.color || '#000' }"></span>
-                  {{ variant.name || variant.color || variant.storage_size || 'Mặc định' }}
+                <button class="variant-btn active">
+                  <span class="color-dot" style="background: #1a1a2e;"></span>
+                  Đen
                 </button>
+                 <!-- Add more mock variants if needed or drive from data -->
               </div>
             </div>
 
             <!-- Quantity -->
-            <div class="quantity-section">
+             <div class="quantity-section">
               <h4 class="variant-title">Số lượng</h4>
               <div class="quantity-box">
                 <button class="qty-btn" @click="decreaseQty">−</button>
-                <input type="number" v-model.number="quantity" class="qty-input" min="1" :max="maxQuantity" />
+                <input type="number" v-model="quantity" class="qty-input" min="1" />
                 <button class="qty-btn" @click="increaseQty">+</button>
               </div>
-              <span class="stock-info">Còn {{ selectedVariant?.stock || product.stock_total || 0 }} sản phẩm</span>
             </div>
 
             <!-- Actions -->
             <div class="action-buttons">
-              <button class="btn-add-cart" @click="addToCart" :disabled="addingToCart">
-                <span v-if="addingToCart" class="loading-spinner"></span>
-                <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="8" cy="21" r="1"/>
-                  <circle cx="19" cy="21" r="1"/>
-                  <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
-                </svg>
-                <span>{{ addingToCart ? 'Đang thêm...' : 'Thêm vào giỏ' }}</span>
+              <button class="btn-add-cart" @click="addToCart">
+                <span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+                </span>
+                Thêm vào giỏ
               </button>
-
-              <router-link 
-                :to="`/products/${product.slug}`" 
-                class="btn-view-detail" 
-                @click="close"
-              >
+              <router-link :to="`/product/${product.id}`" class="btn-view-detail" @click="close">
                 Xem chi tiết
               </router-link>
             </div>
@@ -107,124 +93,60 @@
         </div>
       </div>
     </div>
-    </Transition>
+  </Transition>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import { useRouter } from 'vue-router'
-import api from '@/api'
+import { ref, watch, computed } from 'vue';
 
 const props = defineProps<{
-  isOpen: boolean
-  product: any // { name, slug, base_price, discount_price, discount_price	, variants: [], short_desc, description, stock_total, ... }
-}>()
+  isOpen: boolean;
+  product: any; // Type strictly if possible
+}>();
 
-const emit = defineEmits(['close', 'add-to-cart'])
+const emit = defineEmits(['close', 'add-to-cart']);
 
-const router = useRouter()
+const quantity = ref(1);
+const activeImage = ref('');
 
-const quantity = ref(1)
-const activeImage = ref('')
-const selectedVariant = ref<any>(null)
-const addingToCart = ref(false)
-
-// Computed
-const images = computed(() => {
-  return selectedVariant.value?.image_urls || props.product.variants?.[0]?.image_urls || [props.product.image || '']
-})
-
+// Calculate discount
 const discount = computed(() => {
-  const base = selectedVariant.value?.base_price || props.product.base_price
-  const final = selectedVariant.value?.discount_price	 || props.product.discount_price	 || props.product.base_price
-  return base && final && base > final ? Math.round((base - final) / base * 100) : 0
-})
-
-const maxQuantity = computed(() => selectedVariant.value?.stock || props.product.stock_total || 999)
-
-const averageRating = computed(() => {
-  if (!props.product.comments?.length) return 0
-  const sum = props.product.comments.reduce((acc: number, c: any) => acc + (Number(c.rating) || 5), 0)
-  return sum / props.product.comments.length
-})
-
-// Methods
-const selectVariant = (variant: any) => {
-  selectedVariant.value = variant
-  activeImage.value = variant.image_urls?.[0] || images.value[0]
-}
-
-const formatPrice = (price: number) => {
-  if (!price) return '0đ'
-  return new Intl.NumberFormat('vi-VN').format(Math.round(price)) + 'đ'
-}
-
-const increaseQty = () => {
-  if (quantity.value < maxQuantity.value) quantity.value++
-}
-
-const decreaseQty = () => {
-  if (quantity.value > 1) quantity.value--
-}
-
-const addToCart = async () => {
-  if (!localStorage.getItem('token')) {
-    alert('Vui lòng đăng nhập để thêm vào giỏ hàng!')
-    return
+  if (props.product.oldPrice && props.product.price < props.product.oldPrice) {
+    return Math.round(((props.product.oldPrice - props.product.price) / props.product.oldPrice) * 100);
   }
+  return 0;
+});
 
-  const variant = selectedVariant.value || props.product.variants?.[0]
-  if (!variant?.variant_id) {
-    alert('Sản phẩm này chưa có biến thể khả dụng')
-    return
+watch(() => props.product, (newVal) => {
+  if (newVal) {
+    activeImage.value = newVal.image;
+    quantity.value = 1;
   }
-
-  addingToCart.value = true
-  try {
-    await api.post('/cart/add', {
-      variant_id: variant.variant_id,
-      quantity: quantity.value
-    })
-    alert('Đã thêm vào giỏ hàng!')
-    emit('add-to-cart', { ...props.product, quantity: quantity.value })
-  } catch (err: any) {
-    console.error('Lỗi thêm giỏ hàng:', err)
-    alert(err.response?.data?.message || 'Không thể thêm sản phẩm. Vui lòng thử lại!')
-  } finally {
-    addingToCart.value = false
-  }
-}
+});
 
 const close = () => {
-  emit('close')
-}
+  emit('close');
+};
 
-// Watch khi product thay đổi
-watch(() => props.product, (newProduct) => {
-  if (newProduct) {
-    activeImage.value = newProduct.variants?.[0]?.image_urls?.[0] || newProduct.image || ''
-    selectedVariant.value = newProduct.variants?.[0] || null
-    quantity.value = 1
-  }
-}, { immediate: true })
+const increaseQty = () => quantity.value++;
+const decreaseQty = () => {
+  if (quantity.value > 1) quantity.value--;
+};
+
+const addToCart = () => {
+  emit('add-to-cart', {
+    ...props.product,
+    quantity: quantity.value
+  });
+  close();
+};
+
+const formatPrice = (price: number) => {
+  return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
+};
 </script>
 
 <style scoped>
-.loading-spinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid #fff;
-  border-top: 2px solid transparent;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-right: 8px;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
 .quickview-overlay {
   position: fixed;
   top: 0;

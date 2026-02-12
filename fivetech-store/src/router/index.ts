@@ -30,24 +30,19 @@ const publicRoutes = [
     path: '/',
     component: MainLayout,
     children: [
-      // Danh sách sản phẩm (phải nằm TRƯỚC chi tiết)
       {
         path: 'products',
         name: 'Products',
         component: () => import('@/views/cilent/Products.vue'),
         meta: { title: 'Tất cả sản phẩm' }
       },
-
-      // Chi tiết sản phẩm - dùng :slug (đặt SAU danh sách)
       {
-        path: 'products/:slug',
+        path: 'product/:id/:slug?',
         name: 'ProductDetail',
         component: () => import('@/views/cilent/ProductDetail.vue'),
         props: true,
         meta: { title: 'Chi tiết sản phẩm' }
       },
-
-      // Các trang khác
       {
         path: 'cart',
         name: 'Cart',
@@ -66,6 +61,24 @@ const publicRoutes = [
         component: () => import('@/views/cilent/Contact.vue'),
         meta: { title: 'Liên hệ' }
       },
+      {
+        path: 'account',
+        name: 'UserProfile',
+        component: () => import('@/views/cilent/UserProfile.vue'),
+        meta: { title: 'Tài khoản của tôi' }
+      },
+      {
+        path: 'checkout',
+        name: 'Checkout',
+        component: () => import('@/views/cilent/CheckoutView.vue'),
+        meta: { title: 'Thanh toán' }
+      },
+      {
+        path: 'order-success',
+        name: 'OrderSuccess',
+        component: () => import('@/views/cilent/OrderSuccess.vue'),
+        meta: { title: 'Đặt hàng thành công' }
+      }
     ]
   }
 ]

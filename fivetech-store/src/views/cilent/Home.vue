@@ -14,52 +14,154 @@
             <h2 class="section-title">Phụ kiện bán chạy</h2>
             <p class="section-subtitle">Sản phẩm được khách hàng yêu thích nhất</p>
           </div>
-          <router-link to="/products" class="view-all-link">Xem tất cả →</router-link>
+          <a href="/products" class="view-all-link">Xem tất cả →</a>
         </div>
-
-        <div class="products-grid" v-if="bestSellers.length">
-          <router-link
-            v-for="product in bestSellers"
-            :key="product.product_id"
-            :to="`/products/${product.slug}`"
-            class="product-card-link"
-          >
-            <article class="product-card">
-              <span class="product-badge badge-hot">Hot</span>
-              <div class="product-image-wrapper">
-                <img
-                  :src="product.variants?.[0]?.image_urls?.[0] || 'https://via.placeholder.com/400?text=' + product.name"
-                  :alt="product.name"
-                  class="product-image"
-                />
-                <button
-                  class="wishlist-btn"
-                  :class="{ active: isInWishlist(product.product_id) }"
-                  @click.stop="toggleWishlist(product.product_id)"
-                  title="Yêu thích"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                  </svg>
-                </button>
-              </div>
-              <div class="product-info">
-                <h3 class="product-name">{{ product.name }}</h3>
-                <div class="product-price">
-                  <span class="current-price">{{ formatPrice(product.discount_price || product.base_price) }}đ</span>
-                  <span v-if="product.discount_price" class="old-price">{{ formatPrice(product.base_price) }}đ</span>
-                </div>
-                <div class="product-rating">
-                  <span class="stars">★★★★★</span>
-                  <span class="review-count">(128)</span>
-                </div>
-                <button class="add-to-cart-btn" @click.stop="addToCart(product)">Thêm vào giỏ</button>
-              </div>
-            </article>
-          </router-link>
+        <div class="products-grid">
+          <!-- Product 1 -->
+          <article class="product-card">
+            <span class="product-badge badge-hot">Hot</span>
+            <div class="product-image-wrapper">
+              <img src="https://images.unsplash.com/photo-1605236453806-6ff36851218e?w=400&h=400&fit=crop" alt="Ốp lưng" class="product-image"/>
+              <button class="wishlist-btn" title="Yêu thích">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+              </button>
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Ốp lưng iPhone 15 Pro Max MagSafe</h3>
+              <div class="product-price"><span class="current-price">299.000đ</span></div>
+              <div class="product-rating"><span class="stars">★★★★★</span><span class="review-count">(128)</span></div>
+              <button class="add-to-cart-btn">Thêm vào giỏ</button>
+            </div>
+          </article>
+          <!-- Product 2 -->
+          <article class="product-card">
+            <span class="product-badge badge-hot">Hot</span>
+            <div class="product-image-wrapper">
+              <img src="https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=400&h=400&fit=crop" alt="Sạc" class="product-image"/>
+              <button class="wishlist-btn" title="Yêu thích">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+              </button>
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Củ sạc nhanh 65W GaN USB-C</h3>
+              <div class="product-price"><span class="current-price">450.000đ</span></div>
+              <div class="product-rating"><span class="stars">★★★★★</span><span class="review-count">(95)</span></div>
+              <button class="add-to-cart-btn">Thêm vào giỏ</button>
+            </div>
+          </article>
+          <!-- Product 3 -->
+          <article class="product-card">
+            <span class="product-badge badge-hot">Hot</span>
+            <div class="product-image-wrapper">
+              <img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400&h=400&fit=crop" alt="Tai nghe" class="product-image"/>
+              <button class="wishlist-btn" title="Yêu thích">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+              </button>
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Tai nghe Bluetooth Pro ANC</h3>
+              <div class="product-price"><span class="current-price">1.290.000đ</span></div>
+              <div class="product-rating"><span class="stars">★★★★☆</span><span class="review-count">(76)</span></div>
+              <button class="add-to-cart-btn">Thêm vào giỏ</button>
+            </div>
+          </article>
+          <!-- Product 4 -->
+          <article class="product-card">
+            <span class="product-badge badge-hot">Hot</span>
+            <div class="product-image-wrapper">
+              <img src="https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=400&h=400&fit=crop" alt="Pin" class="product-image"/>
+              <button class="wishlist-btn" title="Yêu thích">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+              </button>
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Pin dự phòng 20000mAh PD 65W</h3>
+              <div class="product-price"><span class="current-price">890.000đ</span></div>
+              <div class="product-rating"><span class="stars">★★★★★</span><span class="review-count">(142)</span></div>
+              <button class="add-to-cart-btn">Thêm vào giỏ</button>
+            </div>
+          </article>
+          <!-- Product 5 -->
+          <article class="product-card">
+            <span class="product-badge badge-hot">Hot</span>
+            <div class="product-image-wrapper">
+              <img src="https://images.unsplash.com/photo-1600541519467-937869997e34?w=400&h=400&fit=crop" alt="Cáp" class="product-image"/>
+              <button class="wishlist-btn" title="Yêu thích">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+              </button>
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Cáp sạc Type-C to Lightning 2m</h3>
+              <div class="product-price"><span class="current-price">189.000đ</span></div>
+              <div class="product-rating"><span class="stars">★★★★★</span><span class="review-count">(234)</span></div>
+              <button class="add-to-cart-btn">Thêm vào giỏ</button>
+            </div>
+          </article>
+          <!-- Product 6 -->
+          <article class="product-card">
+            <span class="product-badge badge-hot">Hot</span>
+            <div class="product-image-wrapper">
+              <img src="https://images.unsplash.com/photo-1560343090-f0409e92791a?w=400&h=400&fit=crop" alt="Kính" class="product-image"/>
+              <button class="wishlist-btn" title="Yêu thích">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+              </button>
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Kính cường lực 9D Full màn</h3>
+              <div class="product-price"><span class="current-price">99.000đ</span></div>
+              <div class="product-rating"><span class="stars">★★★★☆</span><span class="review-count">(312)</span></div>
+              <button class="add-to-cart-btn">Thêm vào giỏ</button>
+            </div>
+          </article>
+          <!-- Product 7 -->
+          <article class="product-card">
+            <span class="product-badge badge-hot">Hot</span>
+            <div class="product-image-wrapper">
+              <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=400&h=400&fit=crop" alt="Đồng hồ" class="product-image"/>
+              <button class="wishlist-btn" title="Yêu thích">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+              </button>
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Dây đeo Apple Watch Sport</h3>
+              <div class="product-price"><span class="current-price">249.000đ</span></div>
+              <div class="product-rating"><span class="stars">★★★★★</span><span class="review-count">(89)</span></div>
+              <button class="add-to-cart-btn">Thêm vào giỏ</button>
+            </div>
+          </article>
+          <!-- Product 8 -->
+          <article class="product-card">
+            <span class="product-badge badge-hot">Hot</span>
+            <div class="product-image-wrapper">
+              <img src="https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=400&h=400&fit=crop" alt="Giá đỡ" class="product-image"/>
+              <button class="wishlist-btn" title="Yêu thích">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+              </button>
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Giá đỡ điện thoại MagSafe ô tô</h3>
+              <div class="product-price"><span class="current-price">399.000đ</span></div>
+              <div class="product-rating"><span class="stars">★★★★★</span><span class="review-count">(67)</span></div>
+              <button class="add-to-cart-btn">Thêm vào giỏ</button>
+            </div>
+          </article>
         </div>
-        <p v-else-if="loading">Đang tải sản phẩm...</p>
-        <p v-else>Không có sản phẩm nào</p>
       </div>
     </section>
 
@@ -74,37 +176,108 @@
             <h2 class="section-title">Phụ kiện mới về</h2>
             <p class="section-subtitle">Cập nhật những sản phẩm mới nhất</p>
           </div>
-          <router-link to="/products?filter=new" class="view-all-link">Xem tất cả →</router-link>
+          <a href="/products?filter=new" class="view-all-link">Xem tất cả →</a>
         </div>
-
-        <div class="products-grid" v-if="newArrivals.length">
-          <router-link
-            v-for="product in newArrivals"
-            :key="product.product_id"
-            :to="`/products/${product.slug}`"
-            class="product-card-link"
-          >
-            <article class="product-card">
-              <span class="product-badge badge-new">New</span>
-              <div class="product-image-wrapper">
-                <img
-                  :src="product.variants?.[0]?.image_urls?.[0] || 'https://via.placeholder.com/400?text=' + product.name"
-                  :alt="product.name"
-                  class="product-image"
-                />
-              </div>
-              <div class="product-info">
-                <h3 class="product-name">{{ product.name }}</h3>
-                <div class="product-price">
-                  <span class="current-price">{{ formatPrice(product.discount_price || product.base_price) }}đ</span>
-                </div>
-                <div class="product-rating"><span class="stars">★★★★★</span><span class="review-count">(12)</span></div>
-                <button class="add-to-cart-btn" @click.stop="addToCart(product)">Thêm vào giỏ</button>
-              </div>
-            </article>
-          </router-link>
+        <div class="products-grid">
+          <!-- New Product 1 -->
+          <article class="product-card">
+            <span class="product-badge badge-new">New</span>
+            <div class="product-image-wrapper">
+              <img src="https://images.unsplash.com/photo-1606229365485-93a3b8ee0385?w=400&h=400&fit=crop" alt="Ốp lưng" class="product-image"/>
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Ốp lưng iPhone 16 Ultra Slim</h3>
+              <div class="product-price"><span class="current-price">349.000đ</span></div>
+              <div class="product-rating"><span class="stars">★★★★★</span><span class="review-count">(12)</span></div>
+              <button class="add-to-cart-btn">Thêm vào giỏ</button>
+            </div>
+          </article>
+          <!-- New Product 2-8 similar structure -->
+          <article class="product-card">
+            <span class="product-badge badge-new">New</span>
+            <div class="product-image-wrapper">
+              <img src="https://images.unsplash.com/photo-1628815113969-0487917f26eb?w=400&h=400&fit=crop" alt="Sạc" class="product-image"/>
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Sạc không dây MagSafe 15W Pro</h3>
+              <div class="product-price"><span class="current-price">599.000đ</span></div>
+              <div class="product-rating"><span class="stars">★★★★☆</span><span class="review-count">(8)</span></div>
+              <button class="add-to-cart-btn">Thêm vào giỏ</button>
+            </div>
+          </article>
+          <article class="product-card">
+            <span class="product-badge badge-new">New</span>
+            <div class="product-image-wrapper">
+              <img src="https://images.unsplash.com/photo-1631867675167-90a456a90863?w=400&h=400&fit=crop" alt="AirTag" class="product-image"/>
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Ốp AirTag da cao cấp</h3>
+              <div class="product-price"><span class="current-price">199.000đ</span></div>
+              <div class="product-rating"><span class="stars">★★★★★</span><span class="review-count">(5)</span></div>
+              <button class="add-to-cart-btn">Thêm vào giỏ</button>
+            </div>
+          </article>
+          <article class="product-card">
+            <span class="product-badge badge-new">New</span>
+            <div class="product-image-wrapper">
+              <img src="https://images.unsplash.com/photo-1625772452859-1c03d5bf1137?w=400&h=400&fit=crop" alt="Hub" class="product-image"/>
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Hub USB-C 7 in 1 4K HDMI</h3>
+              <div class="product-price"><span class="current-price">790.000đ</span></div>
+              <div class="product-rating"><span class="stars">★★★★★</span><span class="review-count">(15)</span></div>
+              <button class="add-to-cart-btn">Thêm vào giỏ</button>
+            </div>
+          </article>
+          <article class="product-card">
+            <span class="product-badge badge-new">New</span>
+            <div class="product-image-wrapper">
+              <img src="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400&h=400&fit=crop" alt="Loa" class="product-image"/>
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Loa Bluetooth JBL Flip 6</h3>
+              <div class="product-price"><span class="current-price">2.490.000đ</span></div>
+              <div class="product-rating"><span class="stars">★★★★★</span><span class="review-count">(23)</span></div>
+              <button class="add-to-cart-btn">Thêm vào giỏ</button>
+            </div>
+          </article>
+          <article class="product-card">
+            <span class="product-badge badge-new">New</span>
+            <div class="product-image-wrapper">
+              <img src="https://images.unsplash.com/photo-1623126908029-58cb08a2b272?w=400&h=400&fit=crop" alt="Bút" class="product-image"/>
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Bút cảm ứng Stylus Pro iPad</h3>
+              <div class="product-price"><span class="current-price">450.000đ</span></div>
+              <div class="product-rating"><span class="stars">★★★★☆</span><span class="review-count">(18)</span></div>
+              <button class="add-to-cart-btn">Thêm vào giỏ</button>
+            </div>
+          </article>
+          <article class="product-card">
+            <span class="product-badge badge-new">New</span>
+            <div class="product-image-wrapper">
+              <img src="https://images.unsplash.com/photo-1615526675159-e248c3021d3f?w=400&h=400&fit=crop" alt="Tripod" class="product-image"/>
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Tripod Selfie Bluetooth 170cm</h3>
+              <div class="product-price"><span class="current-price">320.000đ</span></div>
+              <div class="product-rating"><span class="stars">★★★★★</span><span class="review-count">(42)</span></div>
+              <button class="add-to-cart-btn">Thêm vào giỏ</button>
+            </div>
+          </article>
+          <article class="product-card">
+            <span class="product-badge badge-new">New</span>
+            <div class="product-image-wrapper">
+              <img src="https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=400&h=400&fit=crop" alt="Lens" class="product-image"/>
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Lens Macro 15x cho điện thoại</h3>
+              <div class="product-price"><span class="current-price">280.000đ</span></div>
+              <div class="product-rating"><span class="stars">★★★★☆</span><span class="review-count">(31)</span></div>
+              <button class="add-to-cart-btn">Thêm vào giỏ</button>
+            </div>
+          </article>
         </div>
-        <p v-else-if="loading">Đang tải...</p>
       </div>
     </section>
 
@@ -120,7 +293,7 @@
             <span class="banner-tag">🎧 Flash Sale</span>
             <h2 class="banner-title">Tai nghe Bluetooth giảm sốc</h2>
             <p class="banner-description">Ưu đãi có hạn cho các dòng tai nghe chống ồn cao cấp.</p>
-            <router-link to="/promotions" class="banner-btn">Mua ngay</router-link>
+            <a href="/promotions" class="banner-btn">Mua ngay</a>
           </div>
         </div>
       </div>
@@ -134,38 +307,108 @@
             <h2 class="section-title">🔥 Phụ kiện khuyến mãi</h2>
             <p class="section-subtitle">Giảm giá sốc - Số lượng có hạn</p>
           </div>
-          <router-link to="/promotions" class="view-all-link">Xem tất cả →</router-link>
+          <a href="/promotions" class="view-all-link">Xem tất cả →</a>
         </div>
-
-        <div class="products-grid" v-if="onSale.length">
-          <router-link
-            v-for="product in onSale"
-            :key="product.product_id"
-            :to="`/products/${product.slug}`"
-            class="product-card-link"
-          >
-            <article class="product-card">
-              <span class="product-badge badge-sale">-{{ Math.round((1 - (product.discount_price / product.base_price)) * 100) }}%</span>
-              <div class="product-image-wrapper">
-                <img
-                  :src="product.variants?.[0]?.image_urls?.[0] || 'https://via.placeholder.com/400?text=' + product.name"
-                  :alt="product.name"
-                  class="product-image"
-                />
-              </div>
-              <div class="product-info">
-                <h3 class="product-name">{{ product.name }}</h3>
-                <div class="product-price">
-                  <span class="current-price">{{ formatPrice(product.discount_price) }}đ</span>
-                  <span class="old-price">{{ formatPrice(product.base_price) }}đ</span>
-                </div>
-                <div class="product-rating"><span class="stars">★★★★★</span><span class="review-count">(56)</span></div>
-                <button class="add-to-cart-btn" @click.stop="addToCart(product)">Thêm vào giỏ</button>
-              </div>
-            </article>
-          </router-link>
+        <div class="products-grid">
+          <!-- Sale Product 1 -->
+          <article class="product-card">
+            <span class="product-badge badge-sale">-35%</span>
+            <div class="product-image-wrapper">
+              <img src="https://images.unsplash.com/photo-1601972599748-19fe5e5e7c74?w=400&h=400&fit=crop" alt="Ốp lưng" class="product-image"/>
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Ốp lưng Samsung S24 Ultra Clear</h3>
+              <div class="product-price"><span class="current-price">195.000đ</span><span class="old-price">299.000đ</span></div>
+              <div class="product-rating"><span class="stars">★★★★★</span><span class="review-count">(56)</span></div>
+              <button class="add-to-cart-btn">Thêm vào giỏ</button>
+            </div>
+          </article>
+          <!-- Sale Products 2-8 -->
+          <article class="product-card">
+            <span class="product-badge badge-sale">-50%</span>
+            <div class="product-image-wrapper">
+              <img src="https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=400&h=400&fit=crop" alt="Pin" class="product-image"/>
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Pin dự phòng 10000mAh Slim</h3>
+              <div class="product-price"><span class="current-price">249.000đ</span><span class="old-price">499.000đ</span></div>
+              <div class="product-rating"><span class="stars">★★★★☆</span><span class="review-count">(89)</span></div>
+              <button class="add-to-cart-btn">Thêm vào giỏ</button>
+            </div>
+          </article>
+          <article class="product-card">
+            <span class="product-badge badge-sale">-30%</span>
+            <div class="product-image-wrapper">
+              <img src="https://images.unsplash.com/photo-1600541519467-937869997e34?w=400&h=400&fit=crop" alt="Cáp" class="product-image"/>
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Cáp sạc 3 đầu đa năng 1.5m</h3>
+              <div class="product-price"><span class="current-price">69.000đ</span><span class="old-price">99.000đ</span></div>
+              <div class="product-rating"><span class="stars">★★★★★</span><span class="review-count">(178)</span></div>
+              <button class="add-to-cart-btn">Thêm vào giỏ</button>
+            </div>
+          </article>
+          <article class="product-card">
+            <span class="product-badge badge-sale">-45%</span>
+            <div class="product-image-wrapper">
+              <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop" alt="Giá đỡ" class="product-image"/>
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Giá đỡ điện thoại để bàn xoay 360</h3>
+              <div class="product-price"><span class="current-price">109.000đ</span><span class="old-price">199.000đ</span></div>
+              <div class="product-rating"><span class="stars">★★★★☆</span><span class="review-count">(67)</span></div>
+              <button class="add-to-cart-btn">Thêm vào giỏ</button>
+            </div>
+          </article>
+          <article class="product-card">
+            <span class="product-badge badge-sale">-40%</span>
+            <div class="product-image-wrapper">
+              <img src="https://images.unsplash.com/photo-1560343090-f0409e92791a?w=400&h=400&fit=crop" alt="Kính" class="product-image"/>
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Kính cường lực Samsung Galaxy</h3>
+              <div class="product-price"><span class="current-price">59.000đ</span><span class="old-price">99.000đ</span></div>
+              <div class="product-rating"><span class="stars">★★★★★</span><span class="review-count">(245)</span></div>
+              <button class="add-to-cart-btn">Thêm vào giỏ</button>
+            </div>
+          </article>
+          <article class="product-card">
+            <span class="product-badge badge-sale">-55%</span>
+            <div class="product-image-wrapper">
+              <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=400&h=400&fit=crop" alt="Dây đeo" class="product-image"/>
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Dây đeo đồng hồ thông minh Silicon</h3>
+              <div class="product-price"><span class="current-price">89.000đ</span><span class="old-price">199.000đ</span></div>
+              <div class="product-rating"><span class="stars">★★★★☆</span><span class="review-count">(92)</span></div>
+              <button class="add-to-cart-btn">Thêm vào giỏ</button>
+            </div>
+          </article>
+          <article class="product-card">
+            <span class="product-badge badge-sale">-25%</span>
+            <div class="product-image-wrapper">
+              <img src="https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=400&h=400&fit=crop" alt="Sạc" class="product-image"/>
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Củ sạc nhanh 20W USB-C</h3>
+              <div class="product-price"><span class="current-price">149.000đ</span><span class="old-price">199.000đ</span></div>
+              <div class="product-rating"><span class="stars">★★★★★</span><span class="review-count">(134)</span></div>
+              <button class="add-to-cart-btn">Thêm vào giỏ</button>
+            </div>
+          </article>
+          <article class="product-card">
+            <span class="product-badge badge-sale">-60%</span>
+            <div class="product-image-wrapper">
+              <img src="https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=400&h=400&fit=crop" alt="Phụ kiện" class="product-image"/>
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Túi đựng phụ kiện đa năng</h3>
+              <div class="product-price"><span class="current-price">79.000đ</span><span class="old-price">199.000đ</span></div>
+              <div class="product-rating"><span class="stars">★★★★☆</span><span class="review-count">(56)</span></div>
+              <button class="add-to-cart-btn">Thêm vào giỏ</button>
+            </div>
+          </article>
         </div>
-        <p v-else-if="loading">Đang tải...</p>
       </div>
     </section>
 
@@ -177,7 +420,7 @@
             <span class="banner-tag">🚚 Miễn phí vận chuyển</span>
             <h2 class="banner-title">Freeship đơn từ 300K toàn quốc</h2>
             <p class="banner-description">Áp dụng cho tất cả đơn hàng từ 300.000đ. Giao hàng nhanh 2-4 tiếng nội thành.</p>
-            <router-link to="/products" class="banner-btn">Mua sắm ngay</router-link>
+            <a href="/products" class="banner-btn">Mua sắm ngay</a>
           </div>
           <div class="banner-image">
             <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600&h=400&fit=crop" alt="Freeship"/>
@@ -198,98 +441,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import api from '@/api'  // Import axios instance của bạn (baseURL + token interceptor)
-
 import HomeHeader from '@/components/home/HomeHeader.vue'
 import HomeHero from '@/components/home/HomeHero.vue'
 import PromoBanner from '@/components/home/PromoBanner.vue'
 import BlogSection from '@/components/home/BlogSection.vue'
 import TestimonialsSection from '@/components/home/TestimonialsSection.vue'
 import HomeFooter from '@/components/home/HomeFooter.vue'
-
-// Data
-const bestSellers = ref([])
-const newArrivals = ref([])
-const onSale = ref([])
-const loading = ref(true)
-const wishlist = ref([]) // Lưu IDs sản phẩm yêu thích (fetch từ API /wishlist nếu login)
-
-// Helpers
-const formatPrice = (price) => {
-  return new Intl.NumberFormat('vi-VN').format(price)
-}
-
-const isInWishlist = (id) => wishlist.value.includes(id)
-
-const toggleWishlist = async (productId) => {
-  if (!api.defaults.headers.common['Authorization']) {
-    alert('Vui lòng đăng nhập để thêm yêu thích!')
-    return
-  }
-  try {
-    if (isInWishlist(productId)) {
-      await api.delete(`/wishlist/remove/${productId}`)
-      wishlist.value = wishlist.value.filter(id => id !== productId)
-    } else {
-      await api.post(`/wishlist/add/${productId}`)
-      wishlist.value.push(productId)
-    }
-  } catch (err) {
-    console.error(err)
-  }
-}
-
-const addToCart = async (product) => {
-  if (!api.defaults.headers.common['Authorization']) {
-    alert('Vui lòng đăng nhập để thêm vào giỏ!')
-    return
-  }
-  try {
-    // Lấy variant đầu tiên hoặc prompt chọn variant nếu có nhiều
-    const variantId = product.variants?.[0]?.variant_id
-    if (!variantId) return alert('Sản phẩm không có biến thể')
-
-    await api.post('/cart/add', {
-      variant_id: variantId,
-      quantity: 1
-    })
-    alert('Đã thêm vào giỏ hàng!')
-  } catch (err) {
-    console.error(err)
-    alert('Có lỗi xảy ra!')
-  }
-}
-
-// Fetch data
-onMounted(async () => {
-  try {
-    loading.value = true
-
-    // Fetch bán chạy (giả sử filter=hot hoặc sort by likes_count/sales)
-    const resBest = await api.get('/products', { params: { filter: 'hot', per_page: 8 } })
-    bestSellers.value = resBest.data.data || resBest.data
-
-    // Mới về
-    const resNew = await api.get('/products', { params: { filter: 'new', per_page: 8 } })
-    newArrivals.value = resNew.data.data || resNew.data
-
-    // Khuyến mãi (có discount)
-    const resSale = await api.get('/products', { params: { filter: 'sale', per_page: 8 } })
-    onSale.value = resSale.data.data || resSale.data
-
-    // Nếu login, fetch wishlist
-    if (localStorage.getItem('token')) {
-      const resWish = await api.get('/wishlist')
-      wishlist.value = resWish.data.map(item => item.product_id)
-    }
-  } catch (err) {
-    console.error('Lỗi fetch sản phẩm:', err)
-  } finally {
-    loading.value = false
-  }
-})
 </script>
 
 <style scoped>
@@ -404,7 +561,7 @@ onMounted(async () => {
   transition: all 0.3s ease;
 }
 .product-info { padding: 20px; }
-.product-name { font-size: 16px; font-weight: 600; color: #0f172a; margin: 0 0 12px 0; line-height: 1.4; min-height: 44px; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.product-name { font-size: 16px; font-weight: 600; color: #0f172a; margin: 0 0 12px 0; line-height: 1.4; min-height: 44px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .product-price { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
 .current-price { font-size: 20px; font-weight: 800; color: #ff6b35; }
 .old-price { font-size: 14px; color: #94a3b8; text-decoration: line-through; }
@@ -474,36 +631,5 @@ onMounted(async () => {
   .product-info { padding: 16px; }
   .product-name { font-size: 15px; min-height: auto; }
   .current-price { font-size: 18px; }
-}
-.loading-text, .empty-text {
-  text-align: center;
-  padding: 40px 0;
-  color: #64748b;
-  font-size: 16px;
-}
-
-.product-card-link {
-  text-decoration: none;
-  color: inherit;
-  display: block;
-  border-radius: 20px; /* đồng bộ với card */
-  overflow: hidden; /* để badge không tràn */
-}
-
-/* Hover effect khi hover vào link (tăng trải nghiệm) */
-.product-card-link:hover .product-card {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
-}
-
-.product-card-link:hover .product-image {
-  transform: scale(1.08);
-}
-
-/* Đảm bảo nút con không bị ảnh hưởng */
-.add-to-cart-btn,
-.wishlist-btn {
-  position: relative;
-  z-index: 10;
 }
 </style>

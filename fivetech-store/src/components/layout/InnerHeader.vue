@@ -1,5 +1,5 @@
 <template>
-  <header class="home-header">
+  <header class="inner-header">
     <div class="header-container">
       <!-- Logo -->
       <a href="/" class="logo">
@@ -9,27 +9,21 @@
 
       <!-- Navigation Menu -->
       <nav class="nav-menu">
-        <a href="/" class="nav-link active">Trang chủ</a>
+        <a href="/" class="nav-link">Trang chủ</a>
         <a href="/products" class="nav-link">Sản phẩm</a>
         <a href="/news" class="nav-link">Tin tức</a>
         <a href="/contact" class="nav-link">Liên hệ</a>
       </nav>
 
       <!-- Search Box -->
-      <div class="search-box" ref="searchBox">
-        <input
-          type="text"
-          v-model="searchQuery"
-          placeholder="Tìm kiếm sản phẩm..."
-          class="search-input"
-          @focus="showDropdown = true"
-          @keyup.enter="goToSearch"
-        />
-
-        <button class="search-btn" @click="goToSearch">
-          🔍
+      <div class="search-box">
+        <input type="text" placeholder="Tìm kiếm sản phẩm..." class="search-input" />
+        <button class="search-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+          </svg>
         </button>
-
       </div>
 
       <!-- Auth Buttons -->
@@ -60,106 +54,14 @@
   </header>
 </template>
 
-<script setup>
-import { ref, watch, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import axios from 'axios'
-
-const router = useRouter()
-
-const searchQuery = ref('')
-const results = ref([])
-const showDropdown = ref(false)
-const searchBox = ref(null)
-
-let debounceTimer = null
-
-// Gọi API search gợi ý
-watch(searchQuery, (val) => {
-  clearTimeout(debounceTimer)
-
-  if (!val.trim()) {
-    results.value = []
-    return
-  }
-
-  debounceTimer = setTimeout(async () => {
-    try {
-      const res = await axios.get('/api/search', {
-        params: { q: val, limit: 6 }
-      })
-      results.value = res.data.data
-      showDropdown.value = true
-    } catch {
-      results.value = []
-    }
-  }, 300)
-})
-
-// Enter hoặc click icon
-const goToSearch = () => {
-  const q = searchQuery.value.trim()
-  if (!q) return
-
-  showDropdown.value = false
-  router.push({
-    name: 'Products',
-    query: { search: q }
-  })
-}
-
-// Click ra ngoài thì đóng dropdown
-onMounted(() => {
-  document.addEventListener('click', (e) => {
-    if (!searchBox.value?.contains(e.target)) {
-      showDropdown.value = false
-    }
-  })
-})
-</script>
-
-
-
 <style scoped>
-.search-box {
-  position: relative;
-}
-
-.search-item {
-  display: flex;
-  gap: 12px;
-  padding: 10px;
-  text-decoration: none;
-  color: #111;
-}
-
-.search-item:hover {
-  background: #f3f4f6;
-}
-
-.search-item img {
-  width: 48px;
-  height: 48px;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-.name {
-  font-weight: 600;
-}
-
-.price {
-  color: #e11d48;
-  font-size: 14px;
-}
-
-/* ================= HOME HEADER ================= */
-.home-header {
+.inner-header {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: linear-gradient(135deg, #0a1628 0%, #1a2d4a 100%);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  background: #ffffff;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .header-container {
@@ -173,7 +75,6 @@ onMounted(() => {
   gap: 24px;
 }
 
-/* Logo */
 .logo {
   display: flex;
   align-items: center;
@@ -192,17 +93,16 @@ onMounted(() => {
   color: #ffffff;
   font-size: 18px;
   font-weight: 800;
-  box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+  box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
 }
 
 .logo-text {
   font-size: 26px;
   font-weight: 800;
-  color: #ffffff;
+  color: #0a1628;
   letter-spacing: -0.5px;
 }
 
-/* Navigation */
 .nav-menu {
   display: flex;
   align-items: center;
@@ -211,51 +111,39 @@ onMounted(() => {
 
 .nav-link {
   padding: 10px 20px;
-  color: #cbd5e1;
+  color: #475569;
   text-decoration: none;
   font-weight: 500;
   font-size: 15px;
   border-radius: 8px;
   transition: all 0.3s ease;
-  position: relative;
 }
 
 .nav-link:hover {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.1);
+  color: #ff6b35;
+  background: rgba(255, 107, 53, 0.08);
 }
 
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 2px;
-  background: linear-gradient(90deg, #ff6b35, #f7931e);
-  transition: width 0.3s ease;
+.nav-link.active {
+  color: #ff6b35;
+  background: rgba(255, 107, 53, 0.1);
+  font-weight: 600;
 }
 
-.nav-link:hover::after {
-  width: 60%;
-}
-
-/* Search Box */
 .search-box {
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.1);
+  background: #f1f5f9;
   border-radius: 12px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid #e2e8f0;
   transition: all 0.3s ease;
 }
 
 .search-box:focus-within {
-  background: rgba(255, 255, 255, 0.15);
+  background: #ffffff;
   border-color: #ff6b35;
-  box-shadow: 0 0 20px rgba(255, 107, 53, 0.2);
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
 }
 
 .search-input {
@@ -263,7 +151,7 @@ onMounted(() => {
   padding: 12px 16px;
   border: none;
   background: transparent;
-  color: #ffffff;
+  color: #0f172a;
   font-size: 14px;
   outline: none;
 }
@@ -273,7 +161,11 @@ onMounted(() => {
 }
 
 .search-btn {
-  padding: 12px 16px;
+  padding: 0 16px;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
   border: none;
   color: #ffffff;
@@ -285,15 +177,14 @@ onMounted(() => {
   background: linear-gradient(135deg, #e85a2a 0%, #e88619 100%);
 }
 
-/* Cart Icon */
 .cart-icon {
   position: relative;
   width: 48px;
   height: 48px;
   padding: 0;
-  color: #ffffff;
+  color: #475569;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.1);
+  background: #f1f5f9;
   transition: all 0.3s ease;
   text-decoration: none;
   display: flex;
@@ -302,8 +193,8 @@ onMounted(() => {
 }
 
 .cart-icon:hover {
-  background: rgba(255, 107, 53, 0.2);
-  transform: translateY(-2px);
+  background: rgba(255, 107, 53, 0.1);
+  color: #ff6b35;
 }
 
 /* Auth Buttons */
@@ -323,14 +214,15 @@ onMounted(() => {
 }
 
 .login-btn {
-  color: #ffffff;
+  color: #475569;
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid #e2e8f0;
 }
 
 .login-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.5);
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #0f172a;
 }
 
 .register-btn {
@@ -360,48 +252,25 @@ onMounted(() => {
   justify-content: center;
 }
 
-/* Mobile Menu Toggle */
 .mobile-menu-toggle {
   display: none;
   padding: 8px;
   background: transparent;
   border: none;
-  color: #ffffff;
+  color: #475569;
   cursor: pointer;
 }
 
-/* ================= RESPONSIVE ================= */
 @media (max-width: 1024px) {
-  .nav-menu {
-    display: none;
-  }
-
-  .search-box {
-    flex: 1;
-    max-width: 300px;
-  }
-
-  .search-input {
-    width: 100%;
-  }
-
-  .mobile-menu-toggle {
-    display: block;
-  }
+  .nav-menu { display: none; }
+  .search-box { flex: 1; max-width: 300px; }
+  .search-input { width: 100%; }
+  .mobile-menu-toggle { display: block; }
 }
 
 @media (max-width: 640px) {
-  .header-container {
-    padding: 0 16px;
-    height: 64px;
-  }
-
-  .logo-text {
-    display: none;
-  }
-
-  .search-box {
-    display: none;
-  }
+  .header-container { padding: 0 16px; height: 64px; }
+  .logo-text { display: none; }
+  .search-box { display: none; }
 }
 </style>

@@ -2,84 +2,54 @@
   <aside class="filter-sidebar">
     <div class="filter-header">
       <h3 class="filter-title">Bộ lọc</h3>
-      <button class="clear-filter" @click="clearAll">Xóa tất cả</button>
+      <button class="clear-filter" @click="$emit('clear-all')">Xóa tất cả</button>
     </div>
 
-    <!-- Loading khi fetch -->
-    <div v-if="loading" class="filter-loading">Đang tải bộ lọc...</div>
-
     <!-- Category Filter -->
-    <div class="filter-group" v-else>
+    <div class="filter-group">
       <h4 class="filter-group-title">Danh mục</h4>
       <ul class="filter-list">
-        <li v-for="cat in categories" :key="cat.category_id" class="filter-item">
+        <li v-for="cat in categories" :key="cat.id" class="filter-item">
           <label class="filter-label">
-            <input 
-              type="checkbox" 
-              class="filter-checkbox" 
-              :value="cat.category_id" 
-              v-model="selectedCategories" 
-              @change="emitFilter"
-            />
+            <input type="checkbox" class="filter-checkbox" :value="cat.name" v-model="selectedCategories" />
             <span class="checkmark"></span>
             <span class="label-text">{{ cat.name }}</span>
-            <span class="count">({{ cat.products_count || cat.product_count || 0 }})</span>
+            <span class="count">({{ cat.count }})</span>
           </label>
         </li>
       </ul>
     </div>
 
     <!-- Price Filter -->
-    <div class="filter-group" v-if="!loading">
+    <div class="filter-group">
       <h4 class="filter-group-title">Khoảng giá</h4>
       <div class="price-range">
         <input 
           type="range" 
-          :min="priceRange.min" 
-          :max="priceRange.max" 
+          min="0" 
+          max="10000000" 
           v-model="maxPrice" 
           class="range-slider" 
-          @input="emitFilter"
         />
         <div class="price-labels">
-          <span>{{ formatPrice(priceRange.min) }}</span>
+          <span>0đ</span>
           <span>{{ formatPrice(maxPrice) }}</span>
         </div>
       </div>
       <div class="price-inputs">
-        <input 
-          type="number" 
-          placeholder="Từ" 
-          class="price-input" 
-          v-model.number="minPrice" 
-          :min="priceRange.min" 
-          @input="emitFilter"
-        />
+        <input type="number" placeholder="Từ" class="price-input" v-model="minHash" />
         <span class="price-separator">-</span>
-        <input 
-          type="number" 
-          placeholder="Đến" 
-          class="price-input" 
-          v-model.number="maxPrice" 
-          :max="priceRange.max" 
-          @input="emitFilter"
-        />
+        <input type="number" placeholder="Đến" class="price-input" v-model="maxPriceInput" />
       </div>
     </div>
 
-    <!-- Brand Filter (tạm hard-code, có thể fetch sau) -->
-    <div class="filter-group" v-if="!loading">
+    <!-- Brand Filter -->
+    <div class="filter-group">
       <h4 class="filter-group-title">Thương hiệu</h4>
       <ul class="filter-list">
         <li v-for="brand in brands" :key="brand" class="filter-item">
           <label class="filter-label">
-            <input 
-              type="checkbox" 
-              class="filter-checkbox" 
-              :value="brand" 
-              v-model="selectedBrands" 
-              @change="emitFilter"
-            />
+            <input type="checkbox" class="filter-checkbox" :value="brand" v-model="selectedBrands" />
             <span class="checkmark"></span>
             <span class="label-text">{{ brand }}</span>
           </label>
@@ -90,101 +60,46 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
-import api from '@/api'
+import { ref, watch } from 'vue'
 
-// Emits
+const props = defineProps<{
+  // We can pass initial filters here if needed
+}>()
+
 const emit = defineEmits(['update:filter', 'clear-all'])
 
-// State
-const loading = ref(true)
-const categories = ref<any[]>([])
-const brands = ref<string[]>(['Apple', 'Samsung', 'Baseus', 'Anker', 'Xiaomi', 'Joyroom']) // tạm hard-code, có thể fetch sau
-const selectedCategories = ref<number[]>([])
+const categories = [
+  { id: 1, name: 'Ốp lưng', count: 128 },
+  { id: 2, name: 'Cáp sạc', count: 86 },
+  { id: 3, name: 'Tai nghe', count: 54 },
+  { id: 4, name: 'Sạc nhanh', count: 42 },
+  { id: 5, name: 'Pin dự phòng', count: 38 },
+  { id: 6, name: 'Phụ kiện MagSafe', count: 29 },
+]
+
+const brands = ['Apple', 'Samsung', 'Baseus', 'Anker', 'Xiaomi']
+
+const selectedCategories = ref<string[]>([])
 const selectedBrands = ref<string[]>([])
-const minPrice = ref<number | null>(null)
-const maxPrice = ref<number>(5000000)
+const maxPrice = ref(5000000)
+const minHash = ref<number | null>(null)
+const maxPriceInput = ref<number | null>(null)
 
-// Khoảng giá động
-const priceRange = ref({
-  min: 0,
-  max: 10000000
-})
-
-// Fetch data từ API khi mount
-onMounted(async () => {
-  try {
-    loading.value = true
-
-    // 1. Lấy danh mục + số lượng sản phẩm
-    const resCat = await api.get('/categories')
-    categories.value = resCat.data.map((cat: any) => ({
-      ...cat,
-      product_count: cat.products_count || cat.count || cat.product_count || 0
-    }))
-
-    // 2. Lấy khoảng giá min/max (nếu backend có endpoint)
-    // Nếu chưa có, dùng giá trị mặc định hoặc tính từ API products
-    // Ví dụ endpoint giả định:
-    // const resPrice = await api.get('/products/price-range')
-    // priceRange.value = resPrice.data
-    // maxPrice.value = priceRange.value.max
-
-    // 3. Nếu muốn fetch brands động:
-    // const resProducts = await api.get('/products?per_page=100')
-    // const brandSet = new Set(resProducts.data.data.map((p: any) => p.brand).filter(Boolean))
-    // brands.value = Array.from(brandSet)
-
-  } catch (err) {
-    console.error('Lỗi tải dữ liệu bộ lọc:', err)
-  } finally {
-    loading.value = false
-  }
-})
-
-// Emit filter lên parent (Products.vue)
-const emitFilter = () => {
+watch([selectedCategories, selectedBrands, maxPrice], () => {
   emit('update:filter', {
-    category_ids: selectedCategories.value,
+    categories: selectedCategories.value,
     brands: selectedBrands.value,
-    min_price: minPrice.value,
-    max_price: maxPrice.value > priceRange.value.max ? null : maxPrice.value
+    maxPrice: maxPrice.value
   })
-}
-
-// Watch thay đổi để emit ngay
-watch([selectedCategories, selectedBrands, minPrice, maxPrice], () => {
-  emitFilter()
 })
 
-// Clear all filters
-const clearAll = () => {
-  selectedCategories.value = []
-  selectedBrands.value = []
-  minPrice.value = null
-  maxPrice.value = priceRange.value.max
-  emit('clear-all')
-  emitFilter()
-}
-
-// Format giá
 const formatPrice = (price: number) => {
-  if (price === null || price === undefined) return '0đ'
-  return new Intl.NumberFormat('vi-VN').format(Math.round(price)) + 'đ'
+    if(!price) return '0đ';
+  return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
 }
 </script>
 
-
 <style scoped>
-/* Giữ nguyên toàn bộ style của bạn */
-.filter-loading {
-  padding: 20px;
-  text-align: center;
-  color: #64748b;
-  font-style: italic;
-}
-
-
 .filter-sidebar {
   background: #ffffff;
   border-radius: 20px;

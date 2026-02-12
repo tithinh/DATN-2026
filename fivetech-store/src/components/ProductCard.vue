@@ -1,93 +1,56 @@
 <template>
   <article class="product-card">
-    <!-- Badge -->
-    <span v-if="product.is_featured" class="product-badge badge-hot">Hot</span>
-    <span v-else-if="isNewProduct" class="product-badge badge-new">New</span>
-    <span v-else-if="hasDiscount" class="product-badge badge-sale">-{{ discountPercent }}%</span>
+    <span v-if="product.isHot" class="product-badge badge-hot">Hot</span>
+    <span v-else-if="product.isNew" class="product-badge badge-new">New</span>
+    <span v-else-if="product.isSale" class="product-badge badge-sale">-{{ product.discount }}%</span>
 
     <div class="product-image-wrapper">
-      <!-- Hình ảnh -->
-      <img
-        :src="product.variants?.[0]?.image_urls?.[0] || 'https://via.placeholder.com/400?text=' + encodeURIComponent(product.name)"
-        :alt="product.name"
-        class="product-image"
-        loading="lazy"
-      />
-
-      <!-- Overlay actions -->
+      <img :src="product.image" :alt="product.name" class="product-image" loading="lazy" />
       <div class="product-actions">
-        <!-- Yêu thích -->
-        <button 
-          class="action-btn wishlist-btn" 
-          :class="{ active: isWishlisted }" 
-          title="Yêu thích" 
-          @click.stop="toggleWishlist"
-        >
+        <!-- Nút Yêu thích -->
+        <button class="action-btn wishlist-btn" :class="{ active: isWishlisted }" title="Yêu thích" @click.stop="toggleWishlist">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="action-icon">
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
           </svg>
         </button>
-
-        <!-- Xem nhanh -->
-        <button 
-          class="action-btn quickview-btn" 
-          title="Xem nhanh" 
-          @click.stop="$emit('quick-view', product)"
-        >
+        <!-- Nút Xem nhanh -->
+        <button class="action-btn quickview-btn" title="Xem nhanh" @click.stop="$emit('quick-view', product)">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="action-icon">
             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
             <circle cx="12" cy="12" r="3"></circle>
           </svg>
         </button>
       </div>
-
-      <!-- Overlay link đến chi tiết -->
-      <router-link 
-        :to="`/products/${product.slug}`" 
-        class="product-link-overlay"
-      ></router-link>
+      <router-link :to="{ name: 'ProductDetail', params: { id: product.id } }" class="product-link-overlay"></router-link>
     </div>
 
     <div class="product-info">
-      <!-- Tên sản phẩm (link đến chi tiết) -->
-      <router-link 
-        :to="`/products/${product.slug}`" 
-        class="product-name-link"
-      >
+      <router-link :to="{ name: 'ProductDetail', params: { id: product.id } }" class="product-name-link">
         <h3 class="product-name">{{ product.name }}</h3>
       </router-link>
-
-      <!-- Giá -->
+      
       <div class="product-price">
-        <span class="current-price">{{ formatPrice(product.discount_price || product.base_price) }}</span>
-        <span v-if="hasDiscount" class="old-price">{{ formatPrice(product.base_price) }}</span>
+        <span class="current-price">{{ formatPrice(product.price) }}</span>
+        <span v-if="product.oldPrice" class="old-price">{{ formatPrice(product.oldPrice) }}</span>
       </div>
 
-      <!-- Đánh giá -->
       <div class="product-rating">
         <span class="stars">
-          <span v-for="i in 5" :key="i" :class="{ filled: i <= Math.round(averageRating) }">★</span>
+          <span v-for="i in 5" :key="i" :class="{ filled: i <= Math.round(product.rating) }">★</span>
         </span>
-        <span class="review-count">({{ product.comments_count || product.reviewCount || 0 }})</span>
+        <span class="review-count">({{ product.reviewCount }})</span>
       </div>
 
       <!-- Nút hành động -->
       <div class="product-buttons">
-        <router-link 
-          :to="`/products/${product.slug}`" 
-          class="view-detail-btn"
-        >
+        <router-link :to="{ name: 'ProductDetail', params: { id: product.id } }" class="view-detail-btn">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
             <circle cx="12" cy="12" r="3"></circle>
           </svg>
           <span>Xem chi tiết</span>
         </router-link>
-
-        <button 
-          class="add-to-cart-btn" 
-          @click="addToCart"
-        >
+        <button class="add-to-cart-btn" @click="$emit('add-to-cart', product)">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="9" cy="21" r="1"></circle>
             <circle cx="20" cy="21" r="1"></circle>
@@ -101,113 +64,38 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
-import api from '@/api' // axios instance
+import { ref } from 'vue'
+
+// Product interface
+interface Product {
+  id: number | string
+  name: string
+  price: number
+  oldPrice?: number
+  image: string
+  rating: number
+  reviewCount: number
+  isHot?: boolean
+  isNew?: boolean
+  isSale?: boolean
+  discount?: number
+}
 
 const props = defineProps<{
-  product: {
-    product_id: number | string
-    name: string
-    slug: string
-    base_price: number
-    discount_price?: number
-    final_price?: number
-    image?: string
-    variants?: Array<{
-      variant_id: number
-      image_urls?: string[]
-      stock: number
-      sku?: string
-      color?: string
-      storage_size?: string
-      name?: string
-    }>
-    is_featured?: boolean
-    comments_count?: number
-    average_rating?: number
-    rating?: number
-    reviewCount?: number
-    likes_count?: number
-    stock_total?: number
-    [key: string]: any
-  }
+  product: Product
 }>()
 
-const emit = defineEmits(['add-to-cart', 'quick-view'])
+defineEmits(['add-to-cart', 'quick-view', 'zoom'])
 
-const router = useRouter()
+// Wishlist state
 const isWishlisted = ref(false)
 
-// Computed
-const hasDiscount = computed(() => {
-  return props.product.discount_price && props.product.discount_price < props.product.base_price
-})
+const toggleWishlist = () => {
+  isWishlisted.value = !isWishlisted.value
+}
 
-const discountPercent = computed(() => {
-  if (!hasDiscount.value) return 0
-  return Math.round((props.product.base_price - props.product.discount_price) / props.product.base_price * 100)
-})
-
-const averageRating = computed(() => {
-  return props.product.average_rating || props.product.rating || 5
-})
-
-const isNewProduct = computed(() => {
-  // Logic tùy ý: ví dụ sản phẩm tạo trong 7 ngày qua
-  const createdAt = new Date(props.product.created_at)
-  const now = new Date()
-  const diffDays = (now.getTime() - createdAt.getTime()) / (1000 * 3600 * 24)
-  return diffDays <= 7
-})
-
-// Methods
 const formatPrice = (price: number) => {
-  if (!price) return '0đ'
-  return new Intl.NumberFormat('vi-VN').format(Math.round(price)) + 'đ'
-}
-
-const toggleWishlist = async () => {
-  if (!localStorage.getItem('token')) {
-    return alert('Vui lòng đăng nhập để sử dụng tính năng yêu thích!')
-  }
-
-  try {
-    if (isWishlisted.value) {
-      await api.delete(`/wishlist/remove/${props.product.product_id}`)
-      isWishlisted.value = false
-      alert('Đã xóa khỏi danh sách yêu thích')
-    } else {
-      await api.post(`/wishlist/add/${props.product.product_id}`)
-      isWishlisted.value = true
-      alert('Đã thêm vào danh sách yêu thích')
-    }
-  } catch (err) {
-    console.error('Lỗi wishlist:', err)
-    alert('Có lỗi xảy ra. Vui lòng thử lại!')
-  }
-}
-
-const addToCart = async () => {
-  if (!localStorage.getItem('token')) {
-    return alert('Vui lòng đăng nhập để thêm vào giỏ hàng!')
-  }
-
-  try {
-    const variant = props.product.variants?.[0]
-    if (!variant?.variant_id) {
-      return alert('Sản phẩm này chưa có biến thể khả dụng')
-    }
-
-    await api.post('/cart/add', {
-      variant_id: variant.variant_id,
-      quantity: 1
-    })
-    alert('Đã thêm vào giỏ hàng!')
-  } catch (err) {
-    console.error('Lỗi thêm giỏ hàng:', err)
-    alert('Không thể thêm sản phẩm. Vui lòng thử lại!')
-  }
+  return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price)
 }
 </script>
 
